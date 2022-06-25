@@ -21,14 +21,14 @@ jobs:
         with:
           java-version: '11'
 
-      - name: Build with Maven
-        run: mvn clean install
+      - name: Download jenkins war file
+        run: wget https://get.jenkins.io/war/2.356/jenkins.war
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
-          name: java-app
-          path: '${{ github.workspace }}/target/*.war'
+          name: jenkins
+          path: '${{ github.workspace }}/*.war'
 
   deploy:
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: java-app
+          name: jenkins
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
