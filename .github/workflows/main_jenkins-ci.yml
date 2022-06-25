@@ -21,14 +21,14 @@ jobs:
         with:
           java-version: '11'
 
-      - name: Download jenkins war file
-        run: wget https://get.jenkins.io/war/2.356/jenkins.war
+      - name: Build with Maven
+        run: mvn clean install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
-          name: jenkins
-          path: '${{ github.workspace }}/*.war'
+          name: java-app
+          path: '${{ github.workspace }}/target/*.war'
 
   deploy:
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: jenkins
+          name: java-app
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -49,5 +49,5 @@ jobs:
         with:
           app-name: 'jenkins-ci'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B892B48EE3F24CA69BA6C2437F2E261E }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_70347FCD8B694702ABDC09B043E65B03 }}
           package: '*.war'
